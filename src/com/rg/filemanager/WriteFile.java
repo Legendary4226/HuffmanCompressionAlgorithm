@@ -15,6 +15,7 @@ public class WriteFile {
             writer = new BufferedWriter(fileWriter);
         } catch (Exception e) {
             System.out.println("Error opening file.");
+            System.exit(-1);
         }
     }
 
@@ -23,6 +24,7 @@ public class WriteFile {
             writer.write(text);
         } catch (Exception e) {
             System.out.println("Error writing a text.");
+            System.exit(-1);
         }
     }
 
@@ -31,6 +33,7 @@ public class WriteFile {
             writer.close();
         } catch (Exception e) {
             System.out.println("Error closing file.");
+            System.exit(-1);
         }
     }
 }

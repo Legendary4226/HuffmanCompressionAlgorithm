@@ -15,6 +15,7 @@ public class ReadFile {
             reader = new BufferedReader(filereader);
         } catch(Exception e) {
             System.out.println("Error opening file.");
+            System.exit(-1);
         }
     }
 
@@ -28,6 +29,7 @@ public class ReadFile {
             get = reader.readLine();
         } catch (Exception e) {
             System.out.println("Error reading a line.");
+            System.exit(-1);
         }
         return get;
     }
@@ -37,6 +39,7 @@ public class ReadFile {
             reader.close();
         } catch (Exception e) {
             System.out.println("Error closing file.");
+            System.exit(-1);
         }
     }
 }

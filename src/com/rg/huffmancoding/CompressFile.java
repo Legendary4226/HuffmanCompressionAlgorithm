@@ -34,21 +34,15 @@ public class CompressFile {
 
         WriteFile writeFile = new WriteFile(compressed_file_path);
 
-        String bytesFromFileContent = "";
-        for (int i = 0; i < fileContent.length(); ++i) {
-            bytesFromFileContent = bytesFromFileContent.concat(characterCode.get(fileContent.charAt(i)));
-        }
+        String bytes = convertFileContentToBytes(fileContent, characterCode);
 
-        String bytesToCharacters = "";
-        int i;
-        for (i = 0; i < bytesFromFileContent.length()/8; i++) {
-            int a = Integer.parseInt(bytesFromFileContent.substring(8*i,(i+1)*8),2);
-            bytesToCharacters += (char)(a);
-        }
-        String missingBytes = bytesFromFileContent.substring(i*8);
+        String bytesToCharacters = convertBytesToCharacters(bytes);
+        String missingBytes = bytes.substring(bytes.length() - bytes.length()%8);
 
         // The replace function is here to escape the encoding table to avoid problems when decompressing
-        writeFile.writeText(characterCode.toString().replace("\n", "\\n"));
+        writeFile.writeText(characterCode.toString()
+                .replace("\n", "\\n")
+        );
         writeFile.writeText("\n" + missingBytes + "\n");
         writeFile.writeText(bytesToCharacters);
 
@@ -66,6 +60,7 @@ public class CompressFile {
             extracting = file.getLine();
         }
 
+        // Delete the last unwanted "\n"
         extracted = extracted.substring(0, extracted.length() - 1);
         return extracted;
     }
@@ -100,5 +95,26 @@ public class CompressFile {
             }
         }
         return result;
+    }
+
+    private String convertFileContentToBytes(String fileContent, HashMap<Character, String> characterCode) {
+        String bytes = "";
+
+        for (int i = 0; i < fileContent.length(); ++i) {
+            bytes = bytes.concat(characterCode.get(fileContent.charAt(i)));
+        }
+
+        return bytes;
+    }
+
+    private String convertBytesToCharacters(String bytes) {
+        String bytesToCharacters = "";
+        int i;
+        for (i = 0; i < bytes.length()/8; i++) {
+            int a = Integer.parseInt(bytes.substring(8*i,(i+1)*8),2);
+            bytesToCharacters += (char)(a);
+        }
+
+        return bytesToCharacters;
     }
 }
