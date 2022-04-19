@@ -7,6 +7,9 @@ import com.rg.filemanager.WriteFile;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 public class CompressFile {
 
     public boolean compression(String file_path, String compressed_file_path) {
@@ -39,10 +42,9 @@ public class CompressFile {
         String bytesToCharacters = convertBytesToCharacters(bytes);
         String missingBytes = bytes.substring(bytes.length() - bytes.length()%8);
 
-        // The replace function is here to escape the encoding table to avoid problems when decompressing
-        writeFile.writeText(characterCode.toString()
-                .replace("\n", "\\n")
-        );
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.toJsonTree(characterCode).getAsJsonObject();
+        writeFile.writeText(jsonObject.toString());
         writeFile.writeText("\n" + missingBytes + "\n");
         writeFile.writeText(bytesToCharacters);
 
